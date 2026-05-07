@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Destinations</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ============================================
+           CSS RESET & BASE STYLES
+           ============================================ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --primary-color: #0ea5e9;
+            --secondary-color: #f59e0b;
+            --dark-overlay: rgba(0, 0, 0, 0.4);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-light: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.8);
+            --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --shadow-glow: 0 0 30px rgba(14, 165, 233, 0.3);
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #0a0a0a;
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        /* ============================================
+           HERO SECTION - Full Screen Background
+           ============================================ */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        /* Dark overlay for readability */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 0, 0, 0.6) 0%,
+                rgba(0, 0, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0.6) 100%
+            );
+            z-index: 1;
+        }
+        /* Animated gradient overlay */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                rgba(14, 165, 233, 0.1) 0%,
+                transparent 30%,
+                transparent 70%,
+                rgba(245, 158, 11, 0.1) 100%
+            );
+            z-index: 1;
+            animation: gradientShift 8s ease-in-out infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            width: 100%;
+            animation: fadeInUp 1s ease-out;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* ============================================
+           MAIN HEADER - "Travel Destinations"
+           ============================================ */
+        .main-header {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(
+                135deg,
+                #ffffff 0%,
+                #e0f2fe 25%,
+                #fef3c7 50%,
+                #ffffff 75%,
+                #e0f2fe 100%
+            );
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s ease-in-out infinite;
+            text-shadow: none;
+            filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.3));
+        }
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 300;
+            color: var(--text-dim);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 3rem;
+        }
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            animation: bounce 2s infinite;
+            opacity: 0.7;
+        }
+        .scroll-indicator span {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+        }
+        .scroll-indicator .mouse {
+            width: 24px;
+            height: 36px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            position: relative;
+        }
+        .scroll-indicator .mouse::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 2px;
+            animation: scrollWheel 2s infinite;
+        }
+        @keyframes scrollWheel {
+            0% { opacity: 1; top: 6px; }
+            100% { opacity: 0; top: 18px; }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        /* ============================================
+           DESTINATIONS SECTION
+           ============================================ */
+        .destinations-section {
+            position: relative;
+            padding: 6rem 2rem;
+            background: linear-gradient(180deg, #0a0a0a 0%, #111827 50%, #0a0a0a 100%);
+        }
+        /* Decorative background elements */
+        .destinations-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        .section-label {
+            display: inline-block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding: 0.5rem 1.5rem;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            border-radius: 50px;
+            background: rgba(14, 165, 233, 0.1);
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .section-description {
+            font-size: 1.125rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+        /* ============================================
+           CARDS GRID
+           ============================================ */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        /* ============================================
+           TRAVEL CARD - Glassmorphism Design
+           ============================================ */
+        .travel-card {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 450px;
+            border-radius: 24px;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--text-light);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-soft);
+            transition: var(--transition-smooth);
+            animation: fadeInUp 1s ease-out both;
+        }
+        .travel-card:nth-child(1) { animation-delay: 0.4s; }
+        .travel-card:nth-child(2) { animation-delay: 0.6s; }
+        .travel-card:nth-child(3) { animation-delay: 0.8s; }
+        /* Card background image */
+        .card-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Gradient overlay on card */
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.1) 0%,
+                rgba(0, 0, 0, 0.3) 40%,
+                rgba(0, 0, 0, 0.7) 100%
+            );
+            transition: var(--transition-smooth);
+        }
+        /* Glass card surface */
+        .card-glass {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2.5rem 2rem;
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(0, 0, 0, 0.6) 50%,
+                rgba(0, 0, 0, 0.8) 100%
+            );
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .card-location {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card-location::before {
+            content: '';
+            width: 20px;
+            height: 1px;
+            background: var(--secondary-color);
+        }
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+            transition: var(--transition-smooth);
+        }
+        .card-description {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+        /* Explore button */
+        .explore-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), #0284c7);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        .explore-btn svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+        /* ============================================
+           HOVER EFFECTS
+           ============================================ */
+        .travel-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+            border-color: rgba(14, 165, 233, 0.4);
+        }
+        .travel-card:hover .card-image {
+            transform: scale(1.1);
+        }
+        .travel-card:hover .card-overlay {
+            background: linear-gradient(
+                180deg,
+                rgba(0, 0, 0, 0.05) 0%,
+                rgba(0, 0, 0, 0.4) 40%,
+                rgba(0, 0, 0, 0.85) 100%
+            );
+        }
+        .travel-card:hover .card-title {
+            color: var(--primary-color);
+        }
+        .travel-card:hover .card-description {
+            opacity: 1;
+            max-height: 100px;
+        }
+        .travel-card:hover .explore-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .travel-card:hover .explore-btn svg {
+            transform: translateX(4px);
+        }
+        /* Focus states for accessibility */
+        .travel-card:focus-visible {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 4px;
+        }
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .footer-text {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
+        }
+        .footer-heart {
+            color: #ef4444;
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .hero {
+                background-attachment: scroll;
+            }
+            .main-header {
+                font-size: clamp(2.5rem, 10vw, 4rem);
+            }
+            .subtitle {
+                letter-spacing: 0.15em;
+                margin-bottom: 2rem;
+            }
+            .destinations-section {
+                padding: 4rem 1.5rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .travel-card {
+                height: 380px;
+            }
+            .travel-card:hover .card-description {
+                max-height: 60px;
+            }
+            .scroll-indicator {
+                display: none;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero {
+                padding: 1.5rem;
+            }
+            .card-glass {
+                padding: 2rem 1.5rem;
+            }
+            .card-title {
+                font-size: 1.5rem;
+            }
+            .explore-btn {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* ============================================
+           UTILITY ANIMATIONS
+           ============================================ */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        /* Smooth reveal on scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- ============================================
+         HERO SECTION
+         ============================================ -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1 class="main-header">Travel Destinations</h1>
+            <p class="subtitle">Discover India</p>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="mouse"></div>
+        </div>
+    </section>
+
+    <section class="destinations-section" id="destinations">
+        <div class="section-header">
+            <span class="section-label">Explore India</span>
+            <h2 class="section-title">Choose your destination to explore</h2>
+            <p class="section-description">
+                From snow-capped mountains to serene backwaters, discover the diverse beauty of India's most captivating destinations.
+            </p>
+        </div>
+        <div class="cards-grid">
+            <!-- Card 1: Himachal Pradesh -->
+            <a href="#himachal" class="travel-card" aria-label="Explore Himachal Pradesh">
+                <img 
+                    src="https://images.unsplash.com/photo-1657894736581-ccc35d62d9e2?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=800&q=80" 
+                    alt="Mountains of Himachal Pradesh" 
+                    class="card-image"
+                    loading="lazy"
+                >
+                <div class="card-overlay"></div>
+                <div class="card-glass">
+                    <span class="card-location">Northern India</span>
+                    <h3 class="card-title">Himachal Pradesh</h3>
+                    <p class="card-description">
+                        Experience the breathtaking Himalayan landscapes, ancient temples, and thrilling adventure sports in the lap of nature.
+                    </p>
+                    <button class="explore-btn" aria-hidden="true">
+                        Explore Now
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </a>
+
+            <!-- Card 2: Tamil Nadu -->
+            <a href="#tamilnadu" class="travel-card" aria-label="Explore Tamil Nadu">
+                <img 
+                    src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dGFtaWwlMjBuYWR1fGVufDB8fDB8fHww?auto=format&fit=crop&w=800&q=80" 
+                    alt="Temple architecture of Tamil Nadu" 
+                    class="card-image"
+                    loading="lazy"
+                >
+                <div class="card-overlay"></div>
+                <div class="card-glass">
+                    <span class="card-location">Southern India</span>
+                    <h3 class="card-title">Tamil Nadu</h3>
+                    <p class="card-description">
+                        Immerse yourself in Dravidian culture, magnificent temple architecture, classical arts, and vibrant festivals.
+                    </p>
+                    <button class="explore-btn" aria-hidden="true">
+                        Explore Now
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </a>
+
+            <!-- Card 3: Kerala -->
+            <a href="#kerala" class="travel-card" aria-label="Explore Kerala">
+                <img 
+                    src="https://plus.unsplash.com/premium_photo-1697729438401-fcb4ff66d9a8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=800&q=80" 
+                    alt="Backwaters of Kerala" 
+                    class="card-image"
+                    loading="lazy"
+                >
+                <div class="card-overlay"></div>
+                <div class="card-glass">
+                    <span class="card-location">Southern India</span>
+                    <h3 class="card-title">Kerala</h3>
+                    <p class="card-description">
+                        Sail through tranquil backwaters, relax on pristine beaches, and rejuvenate with Ayurvedic wellness traditions.
+                    </p>
+                    <button class="explore-btn" aria-hidden="true">
+                        Explore Now
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </a>
+
+            <!-- Card 4: Rajasthan -->
+            <a href="#rajasthan" class="travel-card" aria-label="Explore Rajasthan">
+                <img 
+                    src="https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=800&q=80" 
+                    alt="Rajasthan forts and palaces" 
+                    class="card-image"
+                    loading="lazy"
+                >
+                <div class="card-overlay"></div>
+                <div class="card-glass">
+                    <span class="card-location">Northern India</span>
+                    <h3 class="card-title">Rajasthan</h3>
+                    <p class="card-description">
+                        Explore majestic forts and palaces, desert safaris, royal culture, and the vibrant city of Jaipur.
+                    </p>
+                    <button class="explore-btn" aria-hidden="true">
+                        Explore Now
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </a>
+
+            <!-- Card 5: Goa -->
+            <a href="#goa" class="travel-card" aria-label="Explore Goa">
+                <img 
+                    src="https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?auto=format&fit=crop&w=800&q=80" 
+                    alt="Beaches of Goa" 
+                    class="card-image"
+                    loading="lazy"
+                >
+                <div class="card-overlay"></div>
+                <div class="card-glass">
+                    <span class="card-location">Western India</span>
+                    <h3 class="card-title">Goa</h3>
+                    <p class="card-description">
+                        Enjoy golden beaches, nightlife, water sports, and the Portuguese influence in this vibrant coastal city.
+                    </p>
+                    <button class="explore-btn" aria-hidden="true">
+                        Explore Now
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </a>
+
+            <!-- Card 6: Uttarakhand -->
+            <a href="#uttarakhand" class="travel-card" aria-label="Explore Uttarakhand">
+                <img 
+                    src="https://images.unsplash.com/photo-1612438214708-f428a707dd4e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXR0YXJha2hhbmR8ZW58MHx8MHx8fDA%3D?auto=format&fit=crop&w=800&q=80" 
+                    alt="Uttarakhand temples and river rafting" 
+                    class="card-image"
+                    loading="lazy"
+                >
+                <div class="card-overlay"></div>
+                <div class="card-glass">
+                    <span class="card-location">Northern India</span>
+                    <h3 class="card-title">Uttarakhand</h3>
+                    <p class="card-description">
+                        Discover serene temples, river rafting, and breathtaking Himalayan views in the state of Uttarakhand.
+                    </p>
+                    <button class="explore-btn" aria-hidden="true">
+                        Explore Now
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </a>
+
+            <!-- Card 7: Karnataka -->
+            <a href="#karnataka" class="travel-card" aria-label="Explore Karnataka">
+                <img 
+                    src="https://plus.unsplash.com/premium_photo-1697730337612-8bd916249e30?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8a2FybmF0YWthfGVufDB8fDB8fHww?auto=format&fit=crop&w=800&q=80" 
+                    alt="Karnataka tech city and hill stations" 
+                    class="card-image"
+                    loading="lazy"
+                >
+                <div class="card-overlay"></div>
+                <div class="card-glass">
+                    <span class="card-location">Southern India</span>
+                    <h3 class="card-title">Karnataka</h3>
+                    <p class="card-description">
+                        Visit Bangalore for the tech scene, explore Coorg hills for nature and culture, and marvel at the ruins of Hampi.
+                    </p>
+                    <button class="explore-btn" aria-hidden="true">
+                        Explore Now
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </a>
+
+            <!-- Card 8: Uttar Pradesh -->
+            <a href="#up" class="travel-card" aria-label="Explore Uttar Pradesh">
+                <img 
+                    src="https://images.unsplash.com/photo-1706185619150-9515423d32fc?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dXR0YXIlMjBwcmFkZXNofGVufDB8fDB8fHww?auto=format&fit=crop&w=800&q=80" 
+                    alt="Taj Mahal in Uttar Pradesh" 
+                    class="card-image"
+                    loading="lazy"
+                >
+                <div class="card-overlay"></div>
+                <div class="card-glass">
+                    <span class="card-location">Northern India</span>
+                    <h3 class="card-title">Uttar Pradesh</h3>
+                    <p class="card-description">
+                        Visit the iconic Taj Mahal in Agra, Varanasi for spiritual tourism, and explore the ruins of ancient sites like Mathura.
+                    </p>
+                    <button class="explore-btn" aria-hidden="true">
+                        Explore Now
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </a>
+
+            <!-- Card 9: Maharashtra -->
+            <a href="#maharashtra" class="travel-card" aria-label="Explore Maharashtra">
+                <img 
+                    src="https://plus.unsplash.com/premium_photo-1708661816486-25da90d0bf29?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bWFoYXJhc2h0cmF8ZW58MHx8MHx8fDA%3D?auto=format&fit=crop&w=800&q=80" 
+                    alt="Maharashtra beaches and city skyline" 
+                    class="card-image"
+                    loading="lazy"
+                >
+                <div class="card-overlay"></div>
+                <div class="card-glass">
+                    <span class="card-location">Western India</span>
+                    <h3 class="card-title">Maharashtra</h3>
+                    <p class="card-description">
+                        Experience the vibrant city of Mumbai, explore Ajanta Ellora caves for art and history, and enjoy hill stations like Lonavala.
+                    </p>
+                    <button class="explore-btn" aria-hidden="true">
+                        Explore Now
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </button>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================================
+         FOOTER
+         ============================================ -->
+    <footer class="footer">
+        <p class="footer-text">
+            Designed with <span class="footer-heart">♥</span> for Travelers
+        </p>
+    </footer>
+
+</body>
+</html>
